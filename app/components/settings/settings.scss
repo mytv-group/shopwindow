@@ -1,0 +1,23 @@
+.container {
+    position: absolute;
+    background: rgba(24, 29, 37, 0.995);
+    border-radius: 5px;
+    top: 10%;
+    left: 10%;
+    height: 80%;
+    width: 80%;
+}
+
+.title {
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.title h2 {
+    color: #eeeafd;
+}
+
+.loader {
+    margin: auto;
+}

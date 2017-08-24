@@ -1,0 +1,46 @@
+@keyframes spinAroundLogo {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(359deg) }
+}
+
+.preparingOverlay {
+    position: absolute;
+    background: rgba(24, 29, 37, 0.995);
+    border-radius: 5px;
+    top: 10%;
+    left: 10%;
+    height: 80%;
+    width: 80%;
+}
+
+.logo {
+    animation: spinAroundLogo 1500ms infinite linear;
+    position: absolute;
+    top:30%;
+    left: calc(50% - 100px);
+    height: 200px;
+    width: 200px;
+    background-image: url('resources/logo.png');
+    background-size: 100% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.topSign, .bottomSign {
+    color: #ddd;
+}
+
+.topSign {
+    position: absolute;
+    top: 15%;
+    width: 100%;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.bottomSign {
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+    text-align: center;
+}

@@ -1,0 +1,17 @@
+@import "~font-awesome/css/font-awesome.css";
+@import '~bulma/sass/utilities/_all.sass';
+@import '~bulma/sass/base/_all.sass';
+
+$grey-darker: #008672;
+
+/* should be below variables redefinition */
+@import "~bulma/bulma.sass";
+
+html, body {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    background-color: #232c39;
+}

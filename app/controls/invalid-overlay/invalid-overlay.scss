@@ -1,0 +1,29 @@
+.invalidOverlay {
+    position: absolute;
+    background: rgba(24, 29, 37, 0.995);
+    border-radius: 5px;
+    top: 10%;
+    left: 10%;
+    height: 80%;
+    width: 80%;
+}
+
+.logo {
+    position: absolute;
+    top: 40%;
+    left: calc(50% - 100px);
+    height: 200px;
+    width: 200px;
+    background-image: url('resources/logo.png');
+    background-size: 100% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.topSign {
+    color: #ddd;
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+}
