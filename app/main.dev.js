@@ -60,6 +60,7 @@ app.on('ready', async () => {
   }
 
   mainWindow = new BrowserWindow({
+    icon: '../' + __dirname + '/icon.png',
     show: false,
     width: 1024,
     height: 728

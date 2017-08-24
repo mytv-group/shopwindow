@@ -286,7 +286,9 @@ function request(url) {
                         reject(response.status);
                     }
                 }
-            );
+            ).catch((exception) => {
+                reject(exception)
+            });
         } catch(exception) {
             reject(500);
         }

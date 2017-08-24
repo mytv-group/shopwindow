@@ -137,6 +137,7 @@
     "electron": "^1.7.5",
     "electron-builder": "^17.1.1",
     "electron-devtools-installer": "^2.2.0",
+    "electron-icon-maker": "0.0.3",
     "enzyme": "^2.8.2",
     "enzyme-to-json": "^1.5.1",
     "eslint": "^3.19.0",

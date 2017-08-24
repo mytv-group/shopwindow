@@ -8,12 +8,6 @@ import _upperCase from 'lodash.uppercase';
 import PreparingOverlay from 'controls/preparing-overlay/PreparingOverlay';
 import InvalidOverlay from 'controls/invalid-overlay/InvalidOverlay';
 
-import ScheduleStoreReader from 'components/configure/schedule-store-reader/ScheduleStoreReader';
-import SettingsReader from 'components/configure/settings-reader/SettingsReader';
-import ScheduleRequester from 'components/configure/schedule-requester/ScheduleRequester';
-import MediaScanner from 'components/configure/media-scanner/MediaScanner';
-import MediaRequester from 'components/configure/media-requester/MediaRequester';
-
 import navigate from 'actions/navigate';
 import schedule from 'action-chains/schedule';
 
