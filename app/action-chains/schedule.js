@@ -12,7 +12,6 @@ export default function schedule(payload) {
         let chain = {
             // chain global attr
             settings: null,
-            schedule: null,
 
             //chain promise functions
             readStore: bindActionCreators(readStore, dispatch),
@@ -42,7 +41,6 @@ export default function schedule(payload) {
                 )
                 .then(
                     (schedule) => {
-                        chain.schedule = schedule.table;
                         return chain.requestMedia({
                             url: chain.settings.serverUrl,
                             pointId: chain.settings.pointId,
@@ -56,9 +54,7 @@ export default function schedule(payload) {
                 .then(
                     (media) => {
                         resolve({
-                            settings: chain.settings,
-                            schedule: chain.schedule,
-                            media: media
+                            settings: chain.settings
                         });
                     },
                     (message) => reject(message)

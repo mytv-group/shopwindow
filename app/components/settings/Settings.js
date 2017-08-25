@@ -22,6 +22,7 @@ class Settings extends Component {
             return <Form
                     pointId={ parseInt(this.props.pointId) }
                     serverUrl={ this.props.serverUrl }
+                    interactionUrl={ this.props.interactionUrl }
                     authToken={ this.props.authToken }
                     notificationEmail={ this.props.notificationEmail }
                 />;
@@ -47,6 +48,7 @@ function mapStateToProps(state) {
         pending: state.settings.pending,
         pointId: state.settings.pointId,
         serverUrl: state.settings.serverUrl,
+        interactionUrl: state.settings.interactionUrl,
         authToken: state.settings.authToken,
         notificationEmail: state.settings.notificationEmail
     };

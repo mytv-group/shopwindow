@@ -22,6 +22,12 @@ const fields = [
         placeholder: ''
     },
     {
+        key: 'interactionUrl',
+        value: '',
+        label: 'Interaction URL',
+        placeholder: ''
+    },
+    {
         key: 'authToken',
         value: '',
         label: 'Auth token',

@@ -3,6 +3,7 @@ const initialState = {
     pending: null,
     pointId: null,
     serverUrl: null,
+    interactionUrl: null,
     authToken: null,
     notificationEmail: null
 };

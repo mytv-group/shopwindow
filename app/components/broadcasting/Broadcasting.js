@@ -14,6 +14,8 @@ class Broadcasting extends Component {
     constructor(props) {
         super(props);
 
+        this.updateMediaTimeout = null;
+
         if ((this.props.schedule === null)
             || (this.props.media === null)
         ) {
@@ -90,6 +92,12 @@ class Broadcasting extends Component {
         );
     }
 
+    componentWillReceiveProps() {
+        if (this.updateMediaTimeout) {
+            clearInterval(this.updateMediaTimeout);
+        }
+    }
+
     componentDidUpdate() {
         this.prepareNextMedia(
             this.props.schedule,
@@ -99,7 +107,7 @@ class Broadcasting extends Component {
     }
 
     prepareNextMedia(schedule, media, secondsToNext) {
-        setTimeout(() => {
+        this.updateMediaTimeout = setTimeout(() => {
             let currentScheduleItem = this.getScheduleItem(
                 this.props.schedule,
                 this.props.media,
@@ -150,7 +158,7 @@ class Broadcasting extends Component {
 
 function mapStateToProps(state) {
     return {
-        schedule:  state.schedule.table,
+        schedule: state.schedule.table,
         media: state.media.items,
         scheduleFiles: state.schedule.backgroundFiles.concat(state.schedule.advertisingFiles),
     };

@@ -9,6 +9,7 @@ import PreparingOverlay from 'controls/preparing-overlay/PreparingOverlay';
 import InvalidOverlay from 'controls/invalid-overlay/InvalidOverlay';
 
 import navigate from 'actions/navigate';
+import joinSocket from 'actions/joinSocket';
 import schedule from 'action-chains/schedule';
 
 class Configure extends Component {
@@ -23,7 +24,14 @@ class Configure extends Component {
 
     componentDidMount() {
         this.props.schedule().then(
-            () => this.props.navigate(['broadcasting']),
+            (response) => {
+                this.props.joinSocket({
+                    id: response.settings.pointId,
+                    url: response.settings.interactionUrl
+                });
+
+                this.props.navigate(['broadcasting'])
+            },
             (message) => {
                 this.setState({
                     scheduleRequesting: false,
@@ -58,6 +66,7 @@ function mapDispatchToProps(dispatch) {
     return {
         navigate: bindActionCreators(navigate, dispatch),
         schedule: bindActionCreators(schedule, dispatch),
+        joinSocket: bindActionCreators(joinSocket, dispatch),
     }
 }
 

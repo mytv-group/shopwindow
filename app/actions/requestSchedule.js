@@ -329,16 +329,16 @@ export default function requestSchedule(
                         (advRawSchedule) => {
                             let bgTimeschedule = ScheduleFormater.formatBgBlocks(bgRawSchedule);
                             let advertisingFiles = ScheduleFormater.getFileNames(advRawSchedule);
-                            let schedule = [];
+                            let table = [];
                             if (bgTimeschedule.length === 0) {
-                                schedule = ScheduleFormater.formatBgBlocks(advRawSchedule);
+                                table = ScheduleFormater.formatBgBlocks(advRawSchedule);
                             } else {
                                 let advBlocks = ScheduleFormater.formatAdvBlocks(advRawSchedule);
-                                schedule = ScheduleFormater.merge(bgTimeschedule, advBlocks);
+                                table = ScheduleFormater.merge(bgTimeschedule, advBlocks);
                             }
 
                             let response = {
-                                schedule: schedule,
+                                table: table,
                                 backgroundFiles: backgroundFiles,
                                 advertisingFiles: advertisingFiles
                             };
@@ -355,7 +355,7 @@ export default function requestSchedule(
                         },
                         (status) => {
                             let response = {
-                                schedule: ScheduleFormater.formatBgBlocks(bgRawSchedule),
+                                table: ScheduleFormater.formatBgBlocks(bgRawSchedule),
                                 backgroundFiles: backgroundFiles,
                                 advertisingFiles: advertisingFiles
                             };

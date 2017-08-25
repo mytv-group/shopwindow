@@ -13,14 +13,17 @@ export default class Player extends Component {
     }
 
     componentWillUnmount() {
-        this.refs.video.stop();
+        this.refs.video.pause();
         this.refs.video.src='';
     }
 
     autoPlay() {
         this.refs.video.play();
         this.refs.video.currentTime = parseInt(this.props.offset) || 0;
-        this.refs.video.volume = 0;
+
+        if (process.env.NODE_ENV === 'development') {
+            this.refs.video.volume = 0;
+        }
     }
 
     render() {

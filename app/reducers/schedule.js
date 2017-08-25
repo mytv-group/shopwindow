@@ -17,7 +17,7 @@ export default function schedule(state = initialState, action) {
             return { ...state,
                 ...{
                     isReading: false,
-                    table: action.payload.schedule || [],
+                    table: action.payload.table || [],
                     backgroundFiles: action.payload.backgroundFiles || [],
                     advertisingFiles: action.payload.advertisingFiles || []
                 }
@@ -36,7 +36,7 @@ export default function schedule(state = initialState, action) {
                     isRequesting: false,
                     isBadRequest: false,
                     isNotFound: false,
-                    table: action.payload.response.schedule || [],
+                    table: action.payload.response.table || [],
                     backgroundFiles: action.payload.response.backgroundFiles || [],
                     advertisingFiles: action.payload.response.advertisingFiles || []
                 }
