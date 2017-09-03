@@ -1,4 +1,6 @@
 // @flow
+import styles from './broadcasting.scss';
+
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -149,7 +151,7 @@ class Broadcasting extends Component {
         }
 
         return (
-            <div>
+            <div className={ styles.container }>
                 <Player
                     path={ this.state.path }
                     offset={ this.state.videoOffset }
