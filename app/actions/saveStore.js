@@ -8,16 +8,20 @@ export default function saveStore(dataType, payload = {}) {
             payload: payload
         });
 
-        storage.set(dataType, JSON.stringify(payload), (error) => {
+        return new Promise((resolve, reject) => {
+            storage.set(dataType, JSON.stringify(payload), (error) => {
+                dispatch({
+                    type: 'STORING_' + dataType.toUpperCase() + '_FAILED',
+                    payload: payload
+                });
+                reject('storingFailed');
+            });
+
             dispatch({
-                type: 'STORING_' + dataType.toUpperCase() + '_FAILED',
+                type: 'STORING_' + dataType.toUpperCase() + '_COMPLETE',
                 payload: payload
             });
-        });
-
-        dispatch({
-            type: 'STORING_' + dataType.toUpperCase() + '_COMPLETE',
-            payload: payload
+            resolve();
         });
     }
 };

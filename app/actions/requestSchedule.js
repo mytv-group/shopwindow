@@ -1,16 +1,10 @@
 // @flow
-
-function sprintf(fmt, ...args){
-    return fmt
-        .split('%%')
-        .reduce((aggregate, chunk, i) =>
-            aggregate + chunk + (args[i] || ''), '');
-}
+import sprintf from 'utils/sprintf';
 
 let ScheduleFormater = {
     splitRawData: function(rawData) {
         let delimiter = '\n';
-        if (rawData.indexOf('<br>')) {
+        if (rawData.indexOf('<br>') !== -1) {
             delimiter = '<br>';
         }
 

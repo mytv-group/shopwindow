@@ -194,6 +194,7 @@
     "electron-json-storage": "^3.0.7",
     "font-awesome": "^4.7.0",
     "history": "^4.6.1",
+    "is-json": "^2.0.1",
     "lodash": "^4.17.4",
     "lodash.isempty": "^4.4.0",
     "lodash.uppercase": "^4.3.0",

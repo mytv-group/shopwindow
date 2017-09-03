@@ -13,13 +13,27 @@ export default function settings(state = initialState, action) {
     case 'STORING_SETTINGS_START':
         return { ...state, ...{ pending: true } };
     case 'STORING_SETTINGS_COMPLETE':
-        return { ...action.payload, ...{ pending: false } };
+        return { ...settings, ...{
+            pending: false,
+            pointId: parseInt(action.payload.pointId),
+            serverUrl: action.payload.serverUrl,
+            interactionUrl: action.payload.interactionUrl,
+            authToken: action.payload.authToken,
+            notificationEmail: action.payload.notificationEmail
+        }};
     case 'STORING_SETTINGS_FAILED':
         return state;
     case 'READING_SETTINGS_START':
         return { ...state, ...{ pending: true } };
     case 'READING_SETTINGS_COMPLETE':
-        return { ...action.payload, ...{ pending: false } };
+        return { ...settings, ...{
+            pending: false,
+            pointId: parseInt(action.payload.pointId),
+            serverUrl: action.payload.serverUrl,
+            interactionUrl: action.payload.interactionUrl,
+            authToken: action.payload.authToken,
+            notificationEmail: action.payload.notificationEmail
+        }};
     case 'READING_SETTINGS_FAILED':
         return state;
     default:

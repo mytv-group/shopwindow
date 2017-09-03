@@ -7,6 +7,7 @@ import dateFormat from 'dateformat';
 import InvalidOverlay from 'controls/invalid-overlay/InvalidOverlay';
 import PreparingOverlay from 'controls/preparing-overlay/PreparingOverlay';
 import Player from 'components/broadcasting/player/Player';
+import WidgetsContainer from 'components/broadcasting/widgets-container/WidgetsContainer';
 
 import navigate from 'actions/navigate';
 
@@ -148,10 +149,13 @@ class Broadcasting extends Component {
         }
 
         return (
-            <Player
-                path={ this.state.path }
-                offset={ this.state.videoOffset }
-            />
+            <div>
+                <Player
+                    path={ this.state.path }
+                    offset={ this.state.videoOffset }
+                />
+                <WidgetsContainer/>
+            </div>
         );
     }
 }

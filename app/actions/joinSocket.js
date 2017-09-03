@@ -7,8 +7,6 @@ import schedule from 'action-chains/schedule';
 
 export default function joinSocket(payload) {
     return function(dispatch) {
-        let bindedSchedule = bindActionCreators(schedule, dispatch);
-
         var io = sailsIOClient(socketIOClient);
         io.sails.url = payload.url;
         io.sails.reconnection = true;
@@ -20,7 +18,8 @@ export default function joinSocket(payload) {
         });
 
         io.socket.on('updateContent', () => {
-            bindedSchedule();
+            bindActionCreators(schedule, dispatch)();
+            bindActionCreators(requestWidgetsPlan, dispatch)();
         });
     }
 };
