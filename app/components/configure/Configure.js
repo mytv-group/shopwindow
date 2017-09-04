@@ -27,7 +27,8 @@ class Configure extends Component {
             (response) => {
                 this.props.joinSocket({
                     id: response.settings.pointId,
-                    url: response.settings.interactionUrl
+                    serverUrl: response.settings.serverUrl,
+                    interactionUrl: response.settings.interactionUrl
                 });
 
                 this.props.navigate(['broadcasting'])
