@@ -126,20 +126,12 @@ class Broadcasting extends Component {
     render() {
         if ((this.props.schedule === null)
             || (this.props.media === null)
+            || (this.props.schedule.length === 0)
+            || (this.props.scheduleFiles.length !== this.props.media.length)
         ) {
             return <PreparingOverlay
                    task='Preparing schedule'
                />;
-        }
-
-        if ((this.props.schedule.length === 0)
-            || (this.props.scheduleFiles.length !== this.props.media.length)
-        ) {
-            return (
-                <InvalidOverlay
-                    reason='Schedule failure'
-                />
-            )
         }
 
         if (!this.state.path) {
