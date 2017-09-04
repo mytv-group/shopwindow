@@ -60,7 +60,7 @@ app.on('ready', async () => {
   }
 
   mainWindow = new BrowserWindow({
-    icon: '../' + __dirname + '/icon.png',
+    icon: '../' + __dirname + '/resourses/icon.png',
     show: false,
     width: 1024,
     height: 728
@@ -77,7 +77,11 @@ app.on('ready', async () => {
     mainWindow.show();
     mainWindow.focus();
     if (process.env.NODE_ENV !== 'development' && process.env.DEBUG_PROD !== 'true') {
-      mainWindow.setFullScreen(!mainWindow.isFullScreen());
+      mainWindow.setFullScreen(true);
+
+      if (mainWindow.isFullScreen()) {
+          mainWindow.setMenuBarVisibility(false);
+      }
     }
   });
 
