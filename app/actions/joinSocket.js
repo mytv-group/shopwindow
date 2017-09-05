@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 
 import schedule from 'action-chains/schedule';
 import requestWidgetsPlan from 'actions/requestWidgetsPlan';
+import sendScreen from 'actions/sendScreen';
 
 export default function joinSocket(payload) {
     return function(dispatch) {
@@ -24,6 +25,17 @@ export default function joinSocket(payload) {
                 id: payload.id,
                 url: payload.serverUrl
             });
+        });
+
+        io.socket.on('sendScreen', () => {
+            bindActionCreators(sendScreen, dispatch)({
+                id: payload.id,
+                url: payload.serverUrl
+            });
+        });
+
+        io.socket.on('broadcastReload', () => {
+            location.reload();
         });
     }
 };

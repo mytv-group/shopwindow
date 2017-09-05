@@ -13,6 +13,8 @@ import WidgetsContainer from 'components/broadcasting/widgets-container/WidgetsC
 
 import navigate from 'actions/navigate';
 
+const SECONDS_IN_DAY = 86400;
+
 class Broadcasting extends Component {
     constructor(props) {
         super(props);
@@ -71,6 +73,11 @@ class Broadcasting extends Component {
         }
 
         let secondsToNext = (schedule[index].endTimestamp - seconds);
+        let secondsToEnd = schedule[index].endTimestamp;
+
+        if (secondsToEnd >= SECONDS_IN_DAY) {
+            secondsToEnd -= SECONDS_IN_DAY;
+        }
 
         return {
             secondsToNext: secondsToNext,
@@ -126,12 +133,18 @@ class Broadcasting extends Component {
     render() {
         if ((this.props.schedule === null)
             || (this.props.media === null)
-            || (this.props.schedule.length === 0)
-            || (this.props.scheduleFiles.length !== this.props.media.length)
         ) {
             return <PreparingOverlay
                    task='Preparing schedule'
                />;
+        }
+
+        if (this.props.schedule.length === 0) {
+            return (
+                <InvalidOverlay
+                    reason='No planed content'
+                />
+            )
         }
 
         if (!this.state.path) {
@@ -157,8 +170,7 @@ class Broadcasting extends Component {
 function mapStateToProps(state) {
     return {
         schedule: state.schedule.table,
-        media: state.media.items,
-        scheduleFiles: state.schedule.backgroundFiles.concat(state.schedule.advertisingFiles),
+        media: state.media.items
     };
 }
 
