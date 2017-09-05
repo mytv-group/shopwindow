@@ -13,8 +13,6 @@ import WidgetsContainer from 'components/broadcasting/widgets-container/WidgetsC
 
 import navigate from 'actions/navigate';
 
-const SECONDS_IN_DAY = 86400;
-
 class Broadcasting extends Component {
     constructor(props) {
         super(props);
@@ -63,7 +61,7 @@ class Broadcasting extends Component {
         });
 
         if (index === -1) {
-            return null;
+            index = 0;
         }
 
         let path = this.getSheduleItemPath(schedule[index].name, media);
@@ -75,13 +73,9 @@ class Broadcasting extends Component {
         let secondsToNext = (schedule[index].endTimestamp - seconds);
         let secondsToEnd = schedule[index].endTimestamp;
 
-        if (secondsToEnd >= SECONDS_IN_DAY) {
-            secondsToEnd -= SECONDS_IN_DAY;
-        }
-
         return {
             secondsToNext: secondsToNext,
-            secondsToEnd: schedule[index].endTimestamp,
+            secondsToEnd: secondsToEnd,
             videoOffset: seconds - schedule[index].startTimestamp,
             path: path,
         }
