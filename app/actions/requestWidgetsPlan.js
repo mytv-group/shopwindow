@@ -11,7 +11,11 @@ export default function requestWidgetsPlan(payload) {
             let url = payload.url + sprintf('/interface/getWidgets/id/%%', payload.id);
             let options = {
                 credentials: 'same-origin',
-                method: 'get'
+                method: 'get',
+                headers: {
+                    'pragma': 'no-cache',
+                    'cache-control': 'no-cache'
+                }
             };
 
             try {

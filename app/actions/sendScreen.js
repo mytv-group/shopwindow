@@ -22,6 +22,10 @@ export default function sendScreen(payload) {
                         let options = {
                             credentials: 'same-origin',
                             method: 'post',
+                            headers: {
+                                'pragma': 'no-cache',
+                                'cache-control': 'no-cache'
+                            },
                             body: formData
                         };
 

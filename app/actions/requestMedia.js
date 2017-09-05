@@ -85,9 +85,11 @@ export default function requestMedia(payload = {}) {
                 channel: BACKGROUND_CHANNEL
             });
 
-            uploadingDfdArray.push(
-                requestFile(filePath, url, pointId, BACKGROUND_CHANNEL)
-            );
+            if (!fs.existsSync(filePath)) {
+                uploadingDfdArray.push(
+                    requestFile(filePath, url, pointId, BACKGROUND_CHANNEL)
+                );
+            }
         });
 
         advertisingFiles.forEach((fileName) => {
@@ -99,9 +101,11 @@ export default function requestMedia(payload = {}) {
                 channel: ADVERTISING_CHANNEL
             });
 
-            uploadingDfdArray.push(
-                requestFile(filePath, url, pointId, ADVERTISING_CHANNEL)
-            );
+            if (!fs.existsSync(filePath)) {
+                uploadingDfdArray.push(
+                    requestFile(filePath, url, pointId, ADVERTISING_CHANNEL)
+                );
+            }
         });
 
         // using wraping Promise to pass necessary on resolve

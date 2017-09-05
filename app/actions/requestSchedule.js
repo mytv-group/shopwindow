@@ -261,7 +261,11 @@ let ScheduleFormater = {
 function request(url) {
     let options = {
         credentials: 'same-origin',
-        method: 'get'
+        method: 'get',
+        headers: {
+            'pragma': 'no-cache',
+            'cache-control': 'no-cache'
+        }
     };
 
     return new Promise((resolve, reject) => {
