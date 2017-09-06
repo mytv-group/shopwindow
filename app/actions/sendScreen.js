@@ -1,5 +1,8 @@
 import sprintf from 'utils/sprintf';
 import { remote } from 'electron';
+import sharp from 'sharp';
+
+import C from 'config/main';
 
 export default function sendScreen(payload) {
     return (dispatch) => {
@@ -12,9 +15,24 @@ export default function sendScreen(payload) {
             let url = payload.url + sprintf('/interface/storeScreen/');
 
             try {
-                remote.getCurrentWindow().capturePage((buf) => {
+                return new Promise((resolve, reject) => {
+                        try {
+                            remote.getCurrentWindow()
+                                .capturePage((buf) => {
+                                    resolve(buf);
+                                });
+                        } catch (exception) {
+                            reject(exception);
+                        }
+                    })
+                    .then((buf) => {
+                        return sharp(buf.toPng())
+                            .resize(C.screenShotWidth, C.screenShotHeight)
+                            .toBuffer();
+                    })
+                    .then((pngBuffer) => {
                         let formData = new FormData();
-                        const blob = new Blob([new Uint8Array(buf.toPng())], {type: "image/png"});
+                        const blob = new Blob([new Uint8Array(pngBuffer)], {type: "image/png"});
 
                         formData.append('screen', blob, 'screenshot.png');
                         formData.append('id', payload.id);
@@ -29,19 +47,17 @@ export default function sendScreen(payload) {
                             body: formData
                         };
 
-                        fetch(url, options)
-                            .then(
-                                () => {
-                                    dispatch({
-                                        type: 'SEND_SCREEN_COMPLETE'
-                                    });
+                        return fetch(url, options);
+                    })
+                    .then(() => {
+                        dispatch({
+                            type: 'SEND_SCREEN_COMPLETE'
+                        });
 
-                                    resolve();
-                                }
-                            ).catch((exception) => {
-                                throw Error(exception);
-                            });
-                });
+                        resolve();
+                    }).catch((exception) => {
+                        throw Error(exception);
+                    });
             } catch(exception) {
                 dispatch({
                     type: 'SEND_SCREEN_FAILED',
