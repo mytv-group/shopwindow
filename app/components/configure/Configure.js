@@ -42,8 +42,16 @@ class Configure extends Component {
         )
     }
 
-    camelCaseToWords(string) {
-        return _upperCase(string.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"));
+    camelCaseToWords(arg) {
+        if (typeof arg === 'string') {
+            return _upperCase(arg.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"));
+        }
+
+        if (typeof arg.message === 'string') {
+            return _upperCase(arg.message.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"));
+        }
+
+        return 'An unexpected error occurred';
     }
 
     render() {

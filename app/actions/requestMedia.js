@@ -3,11 +3,7 @@ import fs from 'fs';
 import http from 'http';
 import { remote }  from  'electron';
 import dateFormat from 'dateformat';
-
-const SPOOL_PATH_NAME = 'spool';
-const POINTS_PATH_NAME = 'points';
-const BACKGROUND_CHANNEL = 1;
-const ADVERTISING_CHANNEL = 2;
+import C from 'config/main';
 
 function createDirectory(initialPath, pathArr) {
     if (pathArr.length === 0) {
@@ -39,8 +35,8 @@ function requestFile(filePath, url, pointId, channel) {
             let request = http.get(
                 [
                     url,
-                    SPOOL_PATH_NAME,
-                    POINTS_PATH_NAME,
+                    C.spoolPathName,
+                    C.pointsPathName,
                     pointId,
                     channel,
                     fileName
@@ -65,45 +61,46 @@ export default function requestMedia(payload = {}) {
         });
 
         let url = payload.url;
+        let pointId = payload.pointId;
         let backgroundFiles = payload.backgroundFiles;
         let advertisingFiles = payload.advertisingFiles;
+
         let dataPath = remote.app.getPath('userData');
-        let pointId = payload.pointId || dateFormat(new Date(), 'yyyymmdd');
         let date = payload.data || dateFormat(new Date(), 'yyyymmdd');
 
-        createDirectory(dataPath, [SPOOL_PATH_NAME, pointId, date]);
+        createDirectory(dataPath, [C.spoolPathName, pointId, date]);
 
         let uploadingDfdArray = [];
         let mediaFiles = [];
 
         backgroundFiles.forEach((fileName) => {
-            let filePath = [dataPath, SPOOL_PATH_NAME, pointId, date, fileName].join('/');
+            let filePath = [dataPath, C.spoolPathName, pointId, date, fileName].join('/');
 
             mediaFiles.push({
                 name: fileName,
                 path: filePath,
-                channel: BACKGROUND_CHANNEL
+                channel: C.backgroundChannel
             });
 
             if (!fs.existsSync(filePath)) {
                 uploadingDfdArray.push(
-                    requestFile(filePath, url, pointId, BACKGROUND_CHANNEL)
+                    requestFile(filePath, url, pointId, C.backgroundChannel)
                 );
             }
         });
 
         advertisingFiles.forEach((fileName) => {
-            let filePath = [dataPath, SPOOL_PATH_NAME, pointId, date, fileName].join('/');
+            let filePath = [dataPath, C.spoolPathName, pointId, date, fileName].join('/');
 
             mediaFiles.push({
                 name: fileName,
                 path: filePath,
-                channel: ADVERTISING_CHANNEL
+                channel: C.advertisingChannel
             });
 
             if (!fs.existsSync(filePath)) {
                 uploadingDfdArray.push(
-                    requestFile(filePath, url, pointId, ADVERTISING_CHANNEL)
+                    requestFile(filePath, url, pointId, C.advertisingChannel)
                 );
             }
         });

@@ -6,6 +6,7 @@ import readStore from 'actions/readStore';
 import checkSettings from 'actions/checkSettings';
 import requestSchedule from 'actions/requestSchedule';
 import requestMedia from 'actions/requestMedia';
+import cleanMedia from 'actions/cleanMedia';
 
 export default function schedule(payload) {
     return function(dispatch) {
@@ -17,7 +18,8 @@ export default function schedule(payload) {
             readStore: bindActionCreators(readStore, dispatch),
             checkSettings: bindActionCreators(checkSettings, dispatch),
             requestSchedule: bindActionCreators(requestSchedule, dispatch),
-            requestMedia: bindActionCreators(requestMedia, dispatch)
+            requestMedia: bindActionCreators(requestMedia, dispatch),
+            cleanMedia: bindActionCreators(cleanMedia, dispatch)
         };
 
         return new Promise((resolve, reject) => {
@@ -52,7 +54,16 @@ export default function schedule(payload) {
                     (message) => reject(message)
                 )
                 .then(
-                    (media) => {
+                    () => {
+                        return chain.cleanMedia({
+                            pointId: chain.settings.pointId,
+                            date: dateFormat(new Date(), 'yyyymmdd')
+                        });
+                    },
+                    (message) => reject(message)
+                )
+                .then(
+                    () => {
                         resolve({
                             settings: chain.settings
                         });
