@@ -3,7 +3,7 @@ import fs from 'fs';
 import http from 'http';
 import { remote }  from  'electron';
 import dateFormat from 'dateformat';
-import C from 'config/constants';
+import C from 'constants/main';
 
 function createDirectory(initialPath, pathArr) {
     if (pathArr.length === 0) {
