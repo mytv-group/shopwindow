@@ -3,7 +3,7 @@ import fs from 'fs';
 import { remote } from 'electron';
 import rimraf from 'rimraf';
 import dateFormat from 'dateformat';
-import C from 'constants/main';
+import C from 'constants/list';
 
 export default function cleanMedia(payload = {}) {
     return (dispatch) => {
