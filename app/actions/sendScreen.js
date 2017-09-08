@@ -2,7 +2,7 @@ import sprintf from 'utils/sprintf';
 import { remote } from 'electron';
 import sharp from 'sharp';
 
-import C from 'config/main';
+import C from 'config/constants';
 
 export default function sendScreen(payload) {
     return (dispatch) => {
