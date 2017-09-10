@@ -210,8 +210,8 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "resize-img": "^1.1.2",
     "sails.io.js": "^1.1.12",
-    "sharp": "^0.18.2",
     "socket.io-client": "^2.0.3"
   },
   "devEngines": {

@@ -1,6 +1,6 @@
 import sprintf from 'utils/sprintf';
 import { remote } from 'electron';
-import sharp from 'sharp';
+import resizeImg from 'resize-img';
 
 import C from 'constants/list';
 
@@ -26,9 +26,10 @@ export default function sendScreen(payload) {
                         }
                     })
                     .then((buf) => {
-                        return sharp(buf.toPng())
-                            .resize(C.screenShotWidth, C.screenShotHeight)
-                            .toBuffer();
+                        return resizeImg(
+                            buf.toPng(),
+                            { width: C.screenShotWidth, height: C.screenShotHeight }
+                        );
                     })
                     .then((pngBuffer) => {
                         let formData = new FormData();
