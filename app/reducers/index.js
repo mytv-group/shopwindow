@@ -5,13 +5,15 @@ import settings from './settings';
 import schedule from './schedule';
 import media from './media';
 import widgets from './widgets';
+import onAir from './onAir';
 
 const rootReducer = combineReducers({
     router,
     settings,
     schedule,
     media,
-    widgets
+    widgets,
+    onAir
 });
 
 export default rootReducer;

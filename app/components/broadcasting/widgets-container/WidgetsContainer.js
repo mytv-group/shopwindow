@@ -4,12 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import ImageWidget  from 'components/broadcasting/widgets/ImageWidget';
-import requestWidgetsPlan from 'actions/requestWidgetsPlan';
+import WidgetWrapper from 'components/broadcasting/widget-wrapper/WidgetWrapper';
 
-let widgets = {
-    'ImageWidget': ImageWidget
-}
+import requestWidgetsPlan from 'actions/requestWidgetsPlan';
 
 class WidgetsContainer extends Component {
     componentDidMount() {
@@ -26,16 +23,12 @@ class WidgetsContainer extends Component {
             return '';
         }
 
-        return this.props.widgets.map((widgetProps, index) => {
-            let Component = widgets[widgetProps.component || 'ImageWidget'] || ImageWidget;
-            let props = { ...widgetProps,
-                ...{
-                    url: this.props.serverUrl,
-                    key: index
-                }
-            };
-
-            return React.createElement(Component, props);
+        return this.props.widgets.map((options, index) => {
+            return <WidgetWrapper
+                key={ index }
+                url={ this.props.serverUrl }
+                options={ options }
+            />;
         });
     }
 
@@ -62,6 +55,7 @@ function mapStateToProps(state) {
         widgets: state.widgets.items,
         serverUrl: state.settings.serverUrl,
         pointId: state.settings.pointId,
+        onAir: state.onAir.now
     };
 }
 

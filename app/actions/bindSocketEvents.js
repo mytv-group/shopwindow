@@ -7,7 +7,7 @@ import schedule from 'action-chains/schedule';
 import requestWidgetsPlan from 'actions/requestWidgetsPlan';
 import sendScreen from 'actions/sendScreen';
 
-export default function joinSocket(payload) {
+export default function bindSocketEvents(payload) {
     return function(dispatch) {
         var io = sailsIOClient(socketIOClient);
         io.sails.url = payload.interactionUrl;
@@ -20,7 +20,7 @@ export default function joinSocket(payload) {
         });
 
         io.socket.on('updateContent', () => {
-            bindActionCreators(schedule, dispatch)();
+            bindActionCreators(schedule, dispatch)({}, true);
             bindActionCreators(requestWidgetsPlan, dispatch)({
                 id: payload.id,
                 url: payload.serverUrl

@@ -8,11 +8,22 @@ import requestSchedule from 'actions/requestSchedule';
 import requestMedia from 'actions/requestMedia';
 import cleanMedia from 'actions/cleanMedia';
 
-export default function schedule(payload) {
-    return function(dispatch) {
+export default function schedule(
+    payload,
+    silent = false // do not dispatch to redux if true
+) {
+    return function(realDispatch) {
+        let dispatch = realDispatch;
+        if (silent) {
+            // dummy dispatch
+            dispatch = (func) => func(() => {});
+        }
+
         let chain = {
             // chain global attr
             settings: null,
+            schedule: null,
+            media: null,
 
             //chain promise functions
             readStore: bindActionCreators(readStore, dispatch),
@@ -43,6 +54,7 @@ export default function schedule(payload) {
                 )
                 .then(
                     (schedule) => {
+                        chain.schedule = schedule;
                         return chain.requestMedia({
                             url: chain.settings.serverUrl,
                             pointId: chain.settings.pointId,
@@ -54,7 +66,8 @@ export default function schedule(payload) {
                     (message) => reject(message)
                 )
                 .then(
-                    () => {
+                    (media) => {
+                        chain.media = media;
                         return chain.cleanMedia({
                             pointId: chain.settings.pointId,
                             date: dateFormat(new Date(), 'yyyymmdd')
@@ -64,8 +77,32 @@ export default function schedule(payload) {
                 )
                 .then(
                     () => {
+                        if (silent) {
+                            realDispatch({
+                                type: 'READING_SETTINGS_COMPLETE',
+                                payload: chain.settings
+                            });
+
+                            realDispatch({
+                                type: 'REQUESTING_SCHEDULE_COMPLETE',
+                                payload: {
+                                    request: {},
+                                    response: chain.schedule
+                                }
+                            });
+
+                            realDispatch({
+                                type: 'REQUESTING_MEDIA_COMPLETE',
+                                payload: {
+                                    mediaFiles: chain.media
+                                }
+                            });
+                        }
+
                         resolve({
-                            settings: chain.settings
+                            settings: chain.settings,
+                            schedule: chain.schedule,
+                            media: chain.media
                         });
                     },
                     (message) => reject(message)

@@ -47,6 +47,7 @@ let ScheduleFormater = {
 
     fillBgBlocksWithEnd: function (splitedByBlocks) {
         let blocksWithEnd = [];
+
         for (let ii = 0; ii < (splitedByBlocks.length - 1); ii++) {
             blocksWithEnd.push({
                 ...splitedByBlocks[ii],
@@ -65,10 +66,15 @@ let ScheduleFormater = {
             });
         }
 
+        // to start with 00:00:00 always
+        if (splitedByBlocks.length > 0) {
+            blocksWithEnd[0].begin = '00:00:00';
+        }
+
         return blocksWithEnd;
     },
 
-    advBocksToTimeBlocks: function (splitedByBlocks) {
+    advBlocksToTimeBlocks: function (splitedByBlocks) {
         let table = [];
         for (let ii = 0; ii < (splitedByBlocks.length - 1); ii++) {
             let block = splitedByBlocks[ii];
@@ -85,7 +91,8 @@ let ScheduleFormater = {
                         startTime: this.secondsToTime(trackTime),
                         startTimestamp: trackTime,
                         endTime: this.secondsToTime(trackTime + duration),
-                        endTimestamp: (trackTime + duration)
+                        endTimestamp: (trackTime + duration),
+                        type: 'adv'
                     }
                 });
 
@@ -139,7 +146,8 @@ let ScheduleFormater = {
                         startTime: this.secondsToTime(trackTime),
                         startTimestamp: trackTime,
                         endTime: this.secondsToTime(trackTime + duration),
-                        endTimestamp: (trackTime + duration)
+                        endTimestamp: (trackTime + duration),
+                        type: 'bg'
                     }, ...track
                 });
                 trackTime += duration;
@@ -166,7 +174,7 @@ let ScheduleFormater = {
     formatAdvBlocks: function (rawData) {
         let splitedByBlocks = this.splitToBlocks(rawData);
 
-        return this.advBocksToTimeBlocks(splitedByBlocks);
+        return this.advBlocksToTimeBlocks(splitedByBlocks);
     },
 
     getBgOnInterval: function (bgTable, fromTime, toTime) {
@@ -226,6 +234,7 @@ let ScheduleFormater = {
         for (let ii = 0; ii < advBlocks.length; ii++) {
             let advBlock = advBlocks[ii];
             let earlierBg = this.getBgOnInterval(bgTable, earlierFromTime, advBlock.startBlockTimestamp);
+
             earlierFromTime = advBlock.endBlockTimestamp;
             schedule = schedule.concat(earlierBg, advBlock.items);
         }

@@ -12,6 +12,7 @@ import Player from 'components/broadcasting/player/Player';
 import WidgetsContainer from 'components/broadcasting/widgets-container/WidgetsContainer';
 
 import navigate from 'actions/navigate';
+import setCurrentMedia from 'actions/setCurrentMedia';
 
 class Broadcasting extends Component {
     constructor(props) {
@@ -74,10 +75,11 @@ class Broadcasting extends Component {
         let secondsToEnd = schedule[index].endTimestamp;
 
         return {
+            item: schedule[index],
             secondsToNext: secondsToNext,
             secondsToEnd: secondsToEnd,
             videoOffset: seconds - schedule[index].startTimestamp,
-            path: path,
+            path: path
         }
     }
 
@@ -108,6 +110,8 @@ class Broadcasting extends Component {
             this.props.media,
             this.state.secondsToNext
         );
+
+        this.props.setCurrentMedia(this.state.item || {});
     }
 
     prepareNextMedia(schedule, media, secondsToNext) {
@@ -170,7 +174,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        navigate: bindActionCreators(navigate, dispatch)
+        navigate: bindActionCreators(navigate, dispatch),
+        setCurrentMedia: bindActionCreators(setCurrentMedia, dispatch)
     }
 }
 

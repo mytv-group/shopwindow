@@ -8,9 +8,10 @@ import _upperCase from 'lodash.uppercase';
 import PreparingOverlay from 'controls/preparing-overlay/PreparingOverlay';
 import InvalidOverlay from 'controls/invalid-overlay/InvalidOverlay';
 
-import navigate from 'actions/navigate';
-import joinSocket from 'actions/joinSocket';
 import schedule from 'action-chains/schedule';
+import joinSocket from 'action-chains/joinSocket';
+
+import navigate from 'actions/navigate';
 
 class Configure extends Component {
     constructor(props) {
@@ -25,11 +26,7 @@ class Configure extends Component {
     componentDidMount() {
         this.props.schedule().then(
             (response) => {
-                this.props.joinSocket({
-                    id: response.settings.pointId,
-                    serverUrl: response.settings.serverUrl,
-                    interactionUrl: response.settings.interactionUrl
-                });
+                this.props.joinSocket();
 
                 this.props.navigate(['broadcasting'])
             },
