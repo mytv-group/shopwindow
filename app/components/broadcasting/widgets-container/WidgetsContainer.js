@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import WidgetWrapper from 'components/broadcasting/widget-wrapper/WidgetWrapper';
+import WidgetPeriodicityWrapper from 'components/broadcasting/widget-periodicity-wrapper/WidgetPeriodicityWrapper';
 
 import requestWidgetsPlan from 'actions/requestWidgetsPlan';
 
@@ -24,10 +24,9 @@ class WidgetsContainer extends Component {
         }
 
         return this.props.widgets.map((options, index) => {
-            return <WidgetWrapper
+            return <WidgetPeriodicityWrapper
                 key={ index }
-                url={ this.props.serverUrl }
-                options={ options }
+                options={{ ...options, ...{ url: this.props.serverUrl }}}
             />;
         });
     }
@@ -54,8 +53,7 @@ function mapStateToProps(state) {
         pending: state.widgets.pending,
         widgets: state.widgets.items,
         serverUrl: state.settings.serverUrl,
-        pointId: state.settings.pointId,
-        onAir: state.onAir.now
+        pointId: state.settings.pointId
     };
 }
 

@@ -10,46 +10,14 @@ let widgets = {
     'ImageWidget': ImageWidget
 }
 
-class WidgetWrapper extends Component {
-    build() {
-        if (this.props.onAir && (this.props.onAir.type === 'adv')) {
-            return '';
-        }
-
-        let Component = widgets[this.props.options.component || 'ImageWidget'] || ImageWidget;
-        let props = { ...this.props.options,
-            ...{
-                url: this.props.url,
-            }
-        };
-
-        return React.createElement(Component, props);
-    }
-
+export default class WidgetWrapper extends Component {
     render() {
-        console.log(this.props.onAir);
-        return (
-            <div>
-                { this.build() }
-            </div>
-        );
+        let Component = widgets[this.props.options.component || 'ImageWidget'] || ImageWidget;
+
+        return React.createElement(Component, this.props.options);
     }
 }
 
 WidgetWrapper.propTypes = {
-    url: PropTypes.string.isRequired,
     options: PropTypes.object.isRequired,
-    onAir: PropTypes.object.isRequired,
 };
-
-function mapStateToProps(state) {
-    return {
-        onAir: state.onAir.now
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(WidgetWrapper);
