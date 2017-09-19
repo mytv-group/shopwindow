@@ -5,6 +5,10 @@ import { remote }  from  'electron';
 import dateFormat from 'dateformat';
 import C from 'constants/list';
 
+//remote.app.getPath('userData')
+//lnx  ~/.config/RtvShopwindow
+//win C:\Users\Admin\AppData\Roaming\RtvShopwindow
+
 function createDirectory(initialPath, pathArr) {
     if (pathArr.length === 0) {
         return;
