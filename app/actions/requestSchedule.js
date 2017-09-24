@@ -111,6 +111,31 @@ let ScheduleFormater = {
         return table;
     },
 
+    concatSequentialAdvBlovks(splitedByBlocks) {
+        let concated = [];
+
+        if (splitedByBlocks.length > 0) {
+            concated.push(splitedByBlocks[0]);
+        }
+
+        for (let ii = 1; ii < splitedByBlocks.length; ii++) {
+            let curBlock = splitedByBlocks[ii];
+            let lastConcated = concated[concated.length - 1];
+
+            if (lastConcated.endBlockTimestamp === curBlock.startBlockTimestamp) {
+                concated[concated.length - 1] = { ...lastConcated, ...{
+                    items: lastConcated.items.concat(curBlock.items),
+                    endBlockTime: curBlock.endBlockTime,
+                    endBlockTimestamp: curBlock.endBlockTimestamp
+                }};
+            } else {
+                concated.push(curBlock);
+            }
+        }
+
+        return concated;
+    },
+
     timeToSeconds: function (hms) {
         let splited = hms.split(':');
         return (+splited[0]) * 60 * 60 + (+splited[1]) * 60 + (+splited[2]);
@@ -173,16 +198,19 @@ let ScheduleFormater = {
 
     formatAdvBlocks: function (rawData) {
         let splitedByBlocks = this.splitToBlocks(rawData);
+        let timeBlocks = this.advBlocksToTimeBlocks(splitedByBlocks);
 
-        return this.advBlocksToTimeBlocks(splitedByBlocks);
+        return this.concatSequentialAdvBlovks(timeBlocks);
     },
 
     getBgOnInterval: function (bgTable, fromTime, toTime) {
         let earlierBg = [];
-        for (let ii = 0; ii < bgTable.length; ii++) {
-            let item = bgTable[ii];
+        let item = {};
 
-            if ((item.startTimestamp < fromTime)
+        for (let ii = 0; ii < bgTable.length; ii++) {
+            item = bgTable[ii];
+
+            if ((item.startTimestamp <= fromTime)
                 && (item.endTimestamp > fromTime)
                 && (item.endTimestamp < toTime)
             ) {
@@ -204,7 +232,7 @@ let ScheduleFormater = {
 
             if ((item.startTimestamp > fromTime)
                 && (item.startTimestamp < toTime)
-                && (item.endTimestamp > toTime)
+                && (item.endTimestamp >= toTime)
             ) {
                 earlierBg.push({
                     ...item, ...{
@@ -215,10 +243,52 @@ let ScheduleFormater = {
                 });
             }
 
+            if ((item.startTimestamp <= fromTime)
+                && (item.startTimestamp < toTime)
+                && (item.endTimestamp > fromTime)
+                && (item.endTimestamp >= toTime)
+            ) {
+                earlierBg.push({
+                    ...item, ...{
+                        startTime: this.secondsToTime(fromTime),
+                        startTimestamp: (fromTime),
+                        duration: (toTime - fromTime),
+                        endTime: this.secondsToTime(toTime),
+                        endTimestamp: (toTime),
+                    }
+                });
+            }
+
             if (item.startTimestamp > toTime) {
                 break;
             }
         }
+
+        if ((earlierBg.length === 0)
+            && (fromTime !== toTime)
+        ) {
+            let insuranceItem = {};
+
+            if (bgTable.length > 0) {
+                insuranceItem = bgTable[0];
+            }
+
+            if (Object.getOwnPropertyNames(item).length > 0) {
+                insuranceItem = item;
+            }
+
+            earlierBg.push({
+                ...insuranceItem, ...{
+                    startTime: this.secondsToTime(fromTime),
+                    startTimestamp: (fromTime),
+                    duration: (toTime - fromTime),
+                    endTime: this.secondsToTime(toTime),
+                    endTimestamp: (toTime),
+                }
+            });
+        }
+
+
 
         return earlierBg;
     },
