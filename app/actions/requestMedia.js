@@ -37,14 +37,7 @@ function requestFile(filePath, url, pointId, channel) {
     return new Promise((resolve, reject) => {
         try {
             let request = http.get(
-                [
-                    url,
-                    C.spoolPathName,
-                    C.pointsPathName,
-                    pointId,
-                    channel,
-                    fileName
-                ].join('/'),
+                url,
                 (response) => {
                     response
                         .pipe(stream)
@@ -57,6 +50,90 @@ function requestFile(filePath, url, pointId, channel) {
     });
 }
 
+function copyFile(oldPath, newPath) {
+    return new Promise((resolve, reject) => {
+        try {
+            let request = fs.createReadStream(oldPath)
+                .pipe(fs.createWriteStream(newPath))
+                .on('finish', () => resolve(request));
+        } catch(exception) {
+            reject(exception);
+        }
+    });
+}
+
+function pushFileToMedia(
+    uploadingDfdArray,
+    fileDescriptor,
+    pointId,
+    channel,
+    date
+) {
+    let dataPath = remote.app.getPath('userData'),
+        todayFolder = dateFormat(date, 'yyyymmdd'),
+        yesterdayFolder = dateFormat((d => new Date(d.getDate()-1))(date), 'yyyymmdd'),
+        filePath = [dataPath, C.spoolPathName, pointId, todayFolder, fileDescriptor.name].join('/'),
+        previousPath = [dataPath, C.spoolPathName, pointId, yesterdayFolder, fileDescriptor.name].join('/'),
+        fileSizeInBytes = -1,
+        previousFileSizeInBytes = -1;
+
+    createDirectory(dataPath, [C.spoolPathName, pointId, todayFolder]);
+
+    if (fs.existsSync(filePath)) {
+        fileSizeInBytes = fs.statSync(filePath).size;
+    }
+
+    if (fs.existsSync(previousPath)) {
+        previousFileSizeInBytes = fs.statSync(previousPath).size;
+    }
+
+    /*
+     * Already downloaded and correct size - do nothing
+     */
+    if (fileSizeInBytes === fileDescriptor.size) {
+        return {
+            name: fileDescriptor.name,
+            path: filePath,
+            channel: channel
+        };
+    }
+
+    /*
+     * Already downloaded previous, just copy
+     */
+    if ((fileSizeInBytes !== fileDescriptor.size)
+        && (fileDescriptor.size === previousFileSizeInBytes)
+    ) {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        uploadingDfdArray.push(
+            copyFile(previousPath, filePath)
+        );
+
+        return {
+            name: fileDescriptor.name,
+            path: filePath,
+            channel: channel
+        };
+    }
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
+
+    uploadingDfdArray.push(
+        requestFile(filePath, fileDescriptor.url, pointId, channel)
+    );
+
+    return {
+        name: fileDescriptor.name,
+        path: filePath,
+        channel: channel
+    };
+}
+
 export default function requestMedia(payload = {}) {
     return (dispatch) => {
         dispatch({
@@ -64,50 +141,48 @@ export default function requestMedia(payload = {}) {
             payload: payload
         });
 
-        let url = payload.url;
-        let pointId = payload.pointId;
-        let backgroundFiles = payload.backgroundFiles;
-        let advertisingFiles = payload.advertisingFiles;
+        let url = payload.url,
+            pointId = payload.pointId,
+            backgroundFiles = payload.backgroundFiles,
+            advertisingFiles = payload.advertisingFiles,
+            date = new Date(),
+            uploadingDfdArray = [],
+            mediaFiles = [];
 
-        let dataPath = remote.app.getPath('userData');
-        let date = payload.data || dateFormat(new Date(), 'yyyymmdd');
+        if ((typeof payload.date === 'string')
+            && (payload.date.length === 8)
+        ) {
+            date = new Date(
+                payload.date.substring(0, 4),
+                parseInt(payload.date.substring(4, 6)) - 1,
+                payload.date.substring(6, 8)
+            );
+        }
 
-        createDirectory(dataPath, [C.spoolPathName, pointId, date]);
-
-        let uploadingDfdArray = [];
-        let mediaFiles = [];
-
-        backgroundFiles.forEach((fileName) => {
-            let filePath = [dataPath, C.spoolPathName, pointId, date, fileName].join('/');
-
-            mediaFiles.push({
-                name: fileName,
-                path: filePath,
-                channel: C.backgroundChannel
-            });
-
-            if (!fs.existsSync(filePath)) {
-                uploadingDfdArray.push(
-                    requestFile(filePath, url, pointId, C.backgroundChannel)
-                );
-            }
+        backgroundFiles.forEach((fileDescriptor) => {
+            mediaFiles.push(
+                pushFileToMedia(
+                    uploadingDfdArray,
+                    fileDescriptor,
+                    pointId,
+                    C.backgroundChannel,
+                    date
+                )
+            );
         });
 
-        advertisingFiles.forEach((fileName) => {
-            let filePath = [dataPath, C.spoolPathName, pointId, date, fileName].join('/');
-
-            mediaFiles.push({
-                name: fileName,
-                path: filePath,
-                channel: C.advertisingChannel
-            });
-
-            if (!fs.existsSync(filePath)) {
-                uploadingDfdArray.push(
-                    requestFile(filePath, url, pointId, C.advertisingChannel)
-                );
-            }
+        advertisingFiles.forEach((fileDescriptor) => {
+            mediaFiles.push(
+                pushFileToMedia(
+                    uploadingDfdArray,
+                    fileDescriptor,
+                    pointId,
+                    C.advertisingChannel,
+                    date
+                )
+            );
         });
+
 
         // using wraping Promise to pass necessary on resolve
         return new Promise((resolve, reject) =>

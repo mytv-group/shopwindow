@@ -325,10 +325,36 @@ let ScheduleFormater = {
             if (!item.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)
                 && (item !== '')
             ) {
-                let line = item.split(' ');
+                let line = item.split(' '),
+                    meta = line[2],
+                    splitedMeta = meta.split(';'),
+                    size = 0,
+                    url = '';
+
+                for (let index in splitedMeta) {
+                    let item = splitedMeta[index];
+
+                    if (item.indexOf('url') !== -1) {
+                        url = item.replace('url:', '');
+                    }
+
+                    if (item.indexOf('size') !== -1) {
+                        size = parseInt(item.replace('size:', ''));
+                    }
+                }
 
                 if ((line.length >= 3) && (lines.indexOf(line[1]) === -1)) {
-                    lines.push(line[1]);
+                    let existedIndex = lines.findIndex((element) => {
+                        return element.name === line[1];
+                    });
+
+                    if (existedIndex === -1) {
+                        lines.push({
+                            name: line[1],
+                            size: size,
+                            url: url
+                        });
+                    }
                 }
             }
         })

@@ -2,6 +2,7 @@
 import socketIOClient from 'socket.io-client';
 import sailsIOClient from 'sails.io.js';
 import { bindActionCreators } from 'redux';
+import { remote } from 'electron';
 
 import schedule from 'action-chains/schedule';
 import requestWidgetsPlan from 'actions/requestWidgetsPlan';
@@ -36,6 +37,13 @@ export default function bindSocketEvents(payload) {
 
         io.socket.on('broadcastReload', () => {
             location.reload();
+
+            let window = remote.getCurrentWindow();
+            window.setAlwaysOnTop(false);
+            if (process.env.NODE_ENV !== 'development') {
+                window.setAlwaysOnTop(true);
+            }
+
         });
     }
 };

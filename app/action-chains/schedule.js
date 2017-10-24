@@ -66,16 +66,6 @@ export default function schedule(
                     (message) => reject(message)
                 )
                 .then(
-                    (media) => {
-                        chain.media = media;
-                        return chain.cleanMedia({
-                            pointId: chain.settings.pointId,
-                            date: dateFormat(new Date(), 'yyyymmdd')
-                        });
-                    },
-                    (message) => reject(message)
-                )
-                .then(
                     () => {
                         if (silent) {
                             realDispatch({
@@ -103,6 +93,16 @@ export default function schedule(
                             settings: chain.settings,
                             schedule: chain.schedule,
                             media: chain.media
+                        });
+                    },
+                    (message) => reject(message)
+                )
+                .then(
+                    (media) => {
+                        chain.media = media;
+                        return chain.cleanMedia({
+                            pointId: chain.settings.pointId,
+                            date: dateFormat(new Date(), 'yyyymmdd')
                         });
                     },
                     (message) => reject(message)

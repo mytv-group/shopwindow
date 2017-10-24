@@ -28,7 +28,7 @@ class Configure extends Component {
             (response) => {
                 this.props.joinSocket();
 
-                this.props.navigate(['broadcasting'])
+                this.props.navigate(['broadcasting']);
             },
             (message) => {
                 this.setState({
