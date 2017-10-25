@@ -66,7 +66,8 @@ export default function schedule(
                     (message) => reject(message)
                 )
                 .then(
-                    () => {
+                    (media) => {
+                        chain.media = media;
                         if (silent) {
                             realDispatch({
                                 type: 'READING_SETTINGS_COMPLETE',
@@ -98,8 +99,7 @@ export default function schedule(
                     (message) => reject(message)
                 )
                 .then(
-                    (media) => {
-                        chain.media = media;
+                    () => {
                         return chain.cleanMedia({
                             pointId: chain.settings.pointId,
                             date: dateFormat(new Date(), 'yyyymmdd')

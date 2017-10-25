@@ -23,10 +23,28 @@ class Configure extends Component {
         }
     }
 
+    timeToMidnight() {
+        let now = new Date();
+        let then = new Date(now);
+        then.setHours(24, 0, 0, 0);
+
+        return (then - now);
+    }
+
     componentDidMount() {
         this.props.schedule().then(
             (response) => {
                 this.props.joinSocket();
+
+                let toMidnight = this.timeToMidnight();
+
+                setTimeout(() => {
+                    this.props.schedule();
+
+                    setInterval(() => {
+                        this.props.schedule();
+                    }, 86400000);
+                }, toMidnight);
 
                 this.props.navigate(['broadcasting']);
             },
